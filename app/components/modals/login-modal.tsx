@@ -2,7 +2,7 @@
 
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import useRegisterModal from "@/app/hooks/use-register-modal";
 import Modal from "./modal";
@@ -19,6 +19,10 @@ export default function LoginModal() {
     const loginModal = useLoginModal();
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const openRegisterModal = useCallback(() => {
+        loginModal.onClose();
+        registerModal.onOpen();
+    }, []);
 
     const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
         defaultValues: {
@@ -61,8 +65,8 @@ export default function LoginModal() {
             <Button outline label="Continue with Github" icon={AiFillGithub} onClick={() => signIn('github')} />
             <div className="text-neutral-500 text-center mt-4 font-light">
                 <div className="flex flex-row items-center justify-center gap-2">
-                    <div>Already have an account?</div>
-                    <div onClick={registerModal.onClose} className="text-neutral-800 cursor-pointer hover:underline">Log in</div>
+                    <div>First time using Airbnb?</div>
+                    <div onClick={openRegisterModal} className="text-neutral-800 cursor-pointer hover:underline">Create an account</div>
                 </div>
             </div>
         </div>
