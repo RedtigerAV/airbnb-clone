@@ -7,9 +7,10 @@ export interface CategotyBoxProps {
     icon: IconType;
     selected: boolean;
     onClick?: (label: string) => void;
+    view: 'Tab' | 'Box'
 }
 
-export default function CategoryBox({ label, icon: Icon, selected, onClick }: CategotyBoxProps) {
+export default function CategoryBox({ label, icon: Icon, selected, onClick, view }: CategotyBoxProps) {
     return (
         <div onClick={() => onClick?.(label)} className={`
             flex
@@ -18,13 +19,16 @@ export default function CategoryBox({ label, icon: Icon, selected, onClick }: Ca
             justify-center
             gap-2
             p-3
-            border-b-2
             hover:text-neutral-800
             transition
             cursor-pointer
             select-none
-            ${selected ? 'border-b-neutral-800' : 'border-transparent'}
             ${selected ? 'text-neutral-800' : 'text-neutral-500'}
+            ${view === 'Tab' && 'border-b-2'}
+            ${view === 'Box' && 'border-2 rounded-xl hover:border-neutral-800'}
+            ${selected && 'border-neutral-800'}
+            ${view === 'Tab' && !selected && 'border-transparent'}
+            ${view === 'Box' && !selected && 'border-neutral-200'}
         `}>
             <Icon size={24} />
             <div className="font-medium text-sm">{label}</div>

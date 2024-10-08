@@ -103,7 +103,7 @@ export default function Modal({
                             </div>
 
                             {/* BODY */}
-                            <div className="relative p-6 flex-auto">
+                            <div className="relative p-6 flex-1 overflow-y-auto">
                                 {body}
                             </div>
 
@@ -116,7 +116,7 @@ export default function Modal({
                                     )}
                                     <Button disabled={disabled} label={actionLabel} onClick={handleSubmit} />
                                 </div>
-                                
+
                                 {footer}
                             </div>
                         </div>
