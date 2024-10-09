@@ -7,6 +7,15 @@ import Heading from "../heading/heading";
 import categories from "@/app/consts/categories";
 import CategoryBox from "../category-box/category-box";
 import { FieldValues, useForm } from "react-hook-form";
+import { CountrySelect } from "../inputs/country-select";
+import dynamic from "next/dynamic";
+// import { Map } from '../map/map';
+// const Map = dynamic(() => import('../map/map').then(mod => mod.Map), {
+//     ssr: false,
+//     loading: () => (
+//         <div>Loading...</div>
+//     )
+// });
 
 enum STEPS {
     CATEGORY,
@@ -45,6 +54,7 @@ export default function RentModal() {
         }
     });
     const category = watch('category');
+    const location = watch('location');
     const setValue = (id: string, value: any) => {
         _setValue(id, value, {
             shouldDirty: true,
@@ -53,12 +63,14 @@ export default function RentModal() {
         })
     };
 
-    const bodyContent = (
+    const Map = useMemo(() => dynamic(() => import('../map/map').then(m => m.Map), { ssr: false }), [location]);
+
+    let bodyContent = (
         <div className="flex flex-col flex-nowrap gap-6">
             <Heading
                 title="Which of these best describes your place?"
                 subtitle="Pick a category" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:max-h-[50vh]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:max-h-[50vh] md:overflow-y-auto">
                 {categories.map((item) => (
                     <div key={item.label} className="col-span-1">
                         <CategoryBox label={item.label} icon={item.icon} view="Box" selected={category === item.label} onClick={(_category) => setValue('category', _category)} />
@@ -67,6 +79,18 @@ export default function RentModal() {
             </div>
         </div>
     );
+
+    if (step === STEPS.LOCATION) {
+        bodyContent = (
+            <div className="flex flex-col gap-6">
+                <Heading title="Where is your place located?" subtitle="Help guests find you!" />
+
+                <CountrySelect value={location} onChange={(value) => setValue('location', value)} />
+
+                <Map center={location?.latlng} />
+            </div>
+        );
+    }
 
     return (
         <Modal

@@ -69,8 +69,6 @@ export default function Modal({
                     justify-center
                     items-center
                     flex
-                    overflow-x-hidden
-                    overflow-y-auto
                     fixed
                     inset-0
                     z-50
@@ -103,7 +101,7 @@ export default function Modal({
                             </div>
 
                             {/* BODY */}
-                            <div className="relative p-6 flex-1 overflow-y-auto">
+                            <div className="relative p-6 flex-1 max-md:overflow-y-auto">
                                 {body}
                             </div>
 
