@@ -9,13 +9,6 @@ import CategoryBox from "../category-box/category-box";
 import { FieldValues, useForm } from "react-hook-form";
 import { CountrySelect } from "../inputs/country-select";
 import dynamic from "next/dynamic";
-// import { Map } from '../map/map';
-// const Map = dynamic(() => import('../map/map').then(mod => mod.Map), {
-//     ssr: false,
-//     loading: () => (
-//         <div>Loading...</div>
-//     )
-// });
 
 enum STEPS {
     CATEGORY,
@@ -63,7 +56,18 @@ export default function RentModal() {
         })
     };
 
-    const Map = useMemo(() => dynamic(() => import('../map/map').then(m => m.Map), { ssr: false }), [location]);
+    const Map = useMemo(
+        () => dynamic(
+            () => import('../map/map').then(m => m.Map),
+            {
+                ssr: false,
+                loading: () => (
+                    <div className="h-[35vh] w-full rounded-lg flex flex-col justify-center items-center">
+                        <span>Loading...</span>
+                    </div>
+                )
+            }
+        ), [location]);
 
     let bodyContent = (
         <div className="flex flex-col flex-nowrap gap-6">
