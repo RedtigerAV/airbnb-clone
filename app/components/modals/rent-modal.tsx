@@ -9,6 +9,7 @@ import CategoryBox from "../category-box/category-box";
 import { FieldValues, useForm } from "react-hook-form";
 import { CountrySelect } from "../inputs/country-select";
 import dynamic from "next/dynamic";
+import { Counter } from "../inputs/counter";
 
 enum STEPS {
     CATEGORY,
@@ -48,6 +49,9 @@ export default function RentModal() {
     });
     const category = watch('category');
     const location = watch('location');
+    const guestCount = watch('guestCount');
+    const roomCount = watch('roomCount');
+    const bathroomCount = watch('bathroomCount');
     const setValue = (id: string, value: any) => {
         _setValue(id, value, {
             shouldDirty: true,
@@ -94,6 +98,20 @@ export default function RentModal() {
                 <Map center={location?.latlng} />
             </div>
         );
+    }
+
+    if (step === STEPS.INFO) {
+        bodyContent = (
+            <div className="flex flex-col gap-6">
+                <Heading title="Share some basics about your place" subtitle="What amenities do you have?" />
+
+                <Counter title="Guests" subtitle="How many guests do you allow?" value={guestCount} onChange={(value) => setValue('guestCount', value)} />
+                <hr />
+                <Counter title="Rooms" subtitle="How many rooms do you have?" value={roomCount} onChange={(value) => setValue('roomCount', value)} />
+                <hr />
+                <Counter title="Bathrooms" subtitle="How many bathrooms do you have?" value={bathroomCount} onChange={(value) => setValue('bathroomCount', value)} />
+            </div>
+        )
     }
 
     return (
