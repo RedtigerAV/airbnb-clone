@@ -6,11 +6,15 @@ import { useCallback, useMemo, useState } from "react";
 import Heading from "../heading/heading";
 import categories from "@/app/consts/categories";
 import CategoryBox from "../category-box/category-box";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { CountrySelect } from "../inputs/country-select";
 import dynamic from "next/dynamic";
 import { Counter } from "../inputs/counter";
 import { ImageUpload } from "../inputs/image-upload";
+import Input from "../inputs/input";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 enum STEPS {
     CATEGORY,
@@ -22,8 +26,10 @@ enum STEPS {
 }
 
 export default function RentModal() {
+    const router = useRouter();
     const rentModal = useRentModal();
     const [step, setStep] = useState(STEPS.CATEGORY);
+    const [isLoading, setIsLoading] = useState(false);
     const onBack = useCallback(() => (setStep((value) => Math.max(0, value - 1))), [setStep]);
     const onNext = useCallback(() => (setStep((value) => Math.min(STEPS.PRICE, value + 1))), [setStep]);
     const actionLabel = useMemo(() => step === STEPS.PRICE ? 'Create' : 'Next', [step]);
@@ -61,6 +67,24 @@ export default function RentModal() {
             shouldValidate: true
         })
     };
+    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+        if (step !== STEPS.PRICE) {
+            return onNext();
+        }
+
+        setIsLoading(true);
+
+        axios.post('/api/listings', data)
+            .then(() => {
+                toast.success('Listing Created!');
+                router.refresh();
+                reset();
+                setStep(STEPS.CATEGORY);
+                rentModal.onClose();
+            })
+            .catch(() => toast.error('Something went wrong'))
+            .finally(() => setIsLoading(false))
+    }
 
     const Map = useMemo(
         () => dynamic(
@@ -126,12 +150,35 @@ export default function RentModal() {
         )
     }
 
+    if (step === STEPS.DESCRIPTION) {
+        bodyContent = (
+            <div className="flex flex-col gap-6">
+                <Heading title="How would you describe your place?" subtitle="Short and sweet works best" />
+
+                {/** TODO: If switch between DESCRIPTION и PRICE, input is not re-rendered without key. Understand why */}
+                <Input key="title" id="title" label="Title" disabled={isLoading} register={register} errors={errors} required />
+                <hr />
+                <Input key="description" id="description" label="Description" disabled={isLoading} register={register} errors={errors} required />
+            </div>
+        );
+    }
+
+    if (step === STEPS.PRICE) {
+        bodyContent = (
+            <div className="flex flex-col gap-6">
+                <Heading title="Now, set your price" subtitle="How much do you charge per night?" />
+
+                <Input key="price" id="price" label="Price" formatPrice type="number" disabled={isLoading} register={register} errors={errors} required />
+            </div>
+        );
+    }
+
     return (
         <Modal
             title="Airbnb my home"
             body={bodyContent}
             isOpen={rentModal.isOpen}
-            onSubmit={step === STEPS.PRICE ? rentModal.onClose : onNext}
+            onSubmit={handleSubmit(onSubmit)}
             onClose={rentModal.onClose}
             actionLabel={actionLabel}
             secondaryActionLabel={secondaryActionLabel}

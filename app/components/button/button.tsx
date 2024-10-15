@@ -39,7 +39,7 @@ export default function Button({
             ${small ? 'border-[1px]' : 'border-2'}
             ${circle && 'flex flex-col items-center justify-center'}
         `}>
-            {Icon && <Icon size={24} className={`${!circle && '"absolute left-4 top-3"'}`} />}
+            {Icon && <Icon size={24} className={`${!circle && "absolute left-4 top-3"}`} />}
             {label}
         </button>
     );
