@@ -78,7 +78,7 @@ export default function Modal({
                     duration-300
                     ${showModal ? "bg-neutral-800/70" : "bg-neutral-800/0"}
                 `}>
-                <div onClick={(event) => event.stopPropagation()} className="relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full md:h-auto">
+                <div onClick={(event) => event.stopPropagation()} className="relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full md:h-auto max-h-screen">
                     {/* CONTENT */}
                     <div className={`
                         translate

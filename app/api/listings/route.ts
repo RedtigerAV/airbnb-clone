@@ -1,14 +1,9 @@
 import { NextResponse } from "next/server";
 import prisma from '@/app/libs/prismadb';
-import getCurrentUser from "@/app/actions/get-current-user";
+import { withAuth } from "@/app/libs/with-auth";
+import { AuthenticatedRequest } from "@/app/types";
 
-export async function POST(request: Request) {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser) {
-        return NextResponse.error();
-    }
-
+export const POST = withAuth(async ({ request, currentUser }: AuthenticatedRequest) => {
     const body = await request.json();
     const {
         title,
@@ -59,4 +54,4 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(listing);
-}
+});
