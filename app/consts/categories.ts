@@ -6,13 +6,13 @@ import { IoDiamond } from "react-icons/io5";
 import { MdOutlineVilla } from "react-icons/md";
 import { TbBeach, TbMountain, TbPool } from "react-icons/tb";
 
-interface Category {
+export interface Category {
     label: string;
     icon: IconType;
     description: string;
 }
 
-const categories = [
+const categories: Category[] = [
     {
         label: "Beach",
         icon: TbBeach,

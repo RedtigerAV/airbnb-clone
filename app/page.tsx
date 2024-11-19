@@ -1,15 +1,21 @@
-import { Listing } from "@prisma/client";
 import { getListings } from "./actions/get-listings";
 import Container from "./components/container/container";
 import { EmptyState } from "./components/empty-state/empty-state";
 import { ListingCard } from "./components/listings/listing-card";
 import getCurrentUser from "./actions/get-current-user";
+import { SafeListing } from "./types/safe-listing";
 
-export default async function Home() {
+interface ISearchParams {
+  category?: string;
+}
+
+export default async function Home({ searchParams }: { searchParams: ISearchParams }) {
+  const category = searchParams.category;
   const listings = await getListings();
+  const filteredByCategory = listings.filter((listing) => category ? listing.category === category : true);
   const currentUser = await getCurrentUser();
 
-  if (listings?.length === 0) {
+  if (filteredByCategory?.length === 0) {
     return (
       <EmptyState showReset />
     )
@@ -28,7 +34,7 @@ export default async function Home() {
         2xl:grid-cols-6
         gap-8
       ">
-        {listings.map((listing: Listing) => (
+        {filteredByCategory.map((listing: SafeListing) => (
           <ListingCard key={listing.id} currentUser={currentUser} listing={listing} />
         ))}
       </div>
