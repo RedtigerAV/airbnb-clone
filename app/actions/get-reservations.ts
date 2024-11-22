@@ -7,7 +7,7 @@ interface IParams {
     authorId?: string
 }
 
-export async function getReservationsByListingId({ listingId, userId, authorId }: IParams): Promise<SafeReservationWithListing[]> {
+export async function getReservations({ listingId, userId, authorId }: IParams): Promise<SafeReservationWithListing[]> {
     try {
         const query: any = {};
 

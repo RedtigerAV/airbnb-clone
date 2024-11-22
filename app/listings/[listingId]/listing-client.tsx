@@ -67,8 +67,7 @@ export function ListingClient({ listing, reservations = [], currentUser }: Listi
             .then(() => {
                 toast.success('Listing reserved!');
                 setDateRange(initialDateRange);
-                // Redirect to /trips
-                router.refresh();
+                router.push('/trips');
             })
             .catch(() => toast.error('Something is wrong!'))
             .finally(() => setIsLoading(false))
