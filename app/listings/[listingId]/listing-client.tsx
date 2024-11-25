@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Range } from 'react-date-range';
 import { SafeReservation } from "@/app/types/safe-reservation";
+import { revalidatePath } from "next/cache";
 
 const initialDateRange: Range = {
     startDate: new Date(),
@@ -68,6 +69,7 @@ export function ListingClient({ listing, reservations = [], currentUser }: Listi
                 toast.success('Listing reserved!');
                 setDateRange(initialDateRange);
                 router.push('/trips');
+                router.refresh();
             })
             .catch(() => toast.error('Something is wrong!'))
             .finally(() => setIsLoading(false))

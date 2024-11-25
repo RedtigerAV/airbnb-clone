@@ -28,7 +28,7 @@ export function ListingHead({
         <>
             <Heading title={title} subtitle={`${location?.region} ${location?.region}`} />
 
-            <div className="w-full h-[50vh] relative overflow-hidden rounded-xl">
+            <div className="w-full h-[50vh] min-h-[300px] relative overflow-hidden rounded-xl">
                 <Image className="object-cover w-full" src={imageSrc} alt="Listing Picture" fill />
 
                 <div className="absolute top-5 right-5">
