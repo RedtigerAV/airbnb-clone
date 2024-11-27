@@ -5,13 +5,16 @@ import { ListingCard } from "./components/listings/listing-card";
 import getCurrentUser from "./actions/get-current-user";
 import { SafeListing } from "./types/safe-listing";
 
-interface ISearchParams {
-  category?: string;
+interface HomeProps {
+  searchParams: {
+    category?: string;
+    userId?: string;
+  }
 }
 
-export default async function Home({ searchParams }: { searchParams: ISearchParams }) {
+export default async function Home({ searchParams }: HomeProps) {
   const category = searchParams.category;
-  const listings = await getListings();
+  const listings = await getListings({ userId: searchParams.userId });
   const filteredByCategory = listings.filter((listing) => category ? listing.category === category : true);
   const currentUser = await getCurrentUser();
 
