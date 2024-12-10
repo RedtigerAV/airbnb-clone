@@ -9,16 +9,20 @@ interface HomeProps {
   searchParams: {
     category?: string;
     userId?: string;
+    guestCount?: number;
+    roomCount?: number;
+    bathroomCount?: number;
+    startDate?: string;
+    endDate?: string;
+    locationValue?: string;
   }
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const category = searchParams.category;
-  const listings = await getListings({ userId: searchParams.userId });
-  const filteredByCategory = listings.filter((listing) => category ? listing.category === category : true);
+  const listings = await getListings(searchParams);
   const currentUser = await getCurrentUser();
 
-  if (filteredByCategory?.length === 0) {
+  if (listings.length === 0) {
     return (
       <EmptyState showReset />
     )
@@ -37,7 +41,7 @@ export default async function Home({ searchParams }: HomeProps) {
         2xl:grid-cols-6
         gap-8
       ">
-        {filteredByCategory.map((listing: SafeListing) => (
+        {listings.map((listing: SafeListing) => (
           <ListingCard key={listing.id} currentUser={currentUser} listing={listing} />
         ))}
       </div>
